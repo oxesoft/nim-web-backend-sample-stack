@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function request(args) {
+                var url        = args.url;
+                var method     = args.method;
+                var data       = args.data;
+                if (method == undefined) {
+                    method = "GET";
+                }
+                if (data == undefined) {
+                    data = null;
+                }
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function () {
+                    if (req.readyState == XMLHttpRequest.DONE) {
+                        if (req.status == 200) {
+                            console.log(req.response);
+                        } else {
+                            console.log(req.statusText);
+                        }
+                    }
+                }
+                req.open(method, url, true);
+                req.responseType = "json";
+                req.setRequestHeader("Content-Type", "application/json");
+                if (data != null) {
+                    req.send(JSON.stringify(data));
+                } else {
+                    req.send();
+                }
+            };
+            function listItems() {
+                request({
+                    "url": "/items"
+                })
+            };
+            function createItem() {
+                var name = document.getElementById('create-item').value;
+                request({
+                    "url": "/items",
+                    "method": "POST",
+                    "data": {
+                        name
+                    }
+                })
+            };
+            function retrieveItem() {
+                var id = document.getElementById('retrieve-item-id').value;
+                request({
+                    "url": "/items/" + id
+                })
+            };
+            function updateItem() {
+                var id = document.getElementById('update-item-id').value;
+                var name = document.getElementById('update-item').value;
+                request({
+                    "url": "/items/" + id,
+                    "method": "PUT",
+                    "data": {
+                        name
+                    }
+                })
+            };
+            function deleteItem() {
+                var id = document.getElementById('delete-item-id').value;
+                request({
+                    "url": "/items/" + id,
+                    "method": "DELETE"
+                })
+            };
+            function getMyIP() {
+                request({
+                    "url": "/myip"
+                })
+            };
+        </script>
+    </head>
+    <body>
+        Open the developer console
+        <br>
+        <br>
+        <button onclick="listItems()">list all the items</button>
+        <br>
+        <br>
+        <form onsubmit="createItem(); return false;">
+            <input id="create-item" type="text" required placeholder="type the item name">
+            <button type="submit">create</button>
+        </form>
+        <br>
+        <br>
+        <form onsubmit="retrieveItem(); return false;">
+            <input id="retrieve-item-id" type="number" min="1" required placeholder="type the item id">
+            <button type="submit">retrieve</button>
+        </form>
+        <br>
+        <br>
+        <form onsubmit="updateItem(); return false;">
+            <input id="update-item-id" type="number" min="1" required placeholder="type the item id">
+            <input id="update-item" type="text" required placeholder="type the item name">
+            <button type="submit">update</button>
+        </form>
+        <br>
+        <br>
+        <form onsubmit="deleteItem(); return false;">
+            <input id="delete-item-id" type="number" min="1" required placeholder="type the item id">
+            <button type="submit">delete</button>
+        </form>
+        <br>
+        <br>
+        <button onclick="getMyIP()">get my IP</button>
+    </body>
+</html>
