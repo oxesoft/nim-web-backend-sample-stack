@@ -35,10 +35,10 @@ proc sampleRetrieveAll(ctx: Context) {.async, gcsafe.} =
   })
 
 proc sampleCreate(ctx: Context) {.async, gcsafe.} =
-  let obj = parseJson(ctx.request.body())
-  let name = obj["name"].getStr()
-  var item = newItem(name)
   try:
+    let obj = parseJson(ctx.request.body())
+    let name = obj["name"].getStr()
+    var item = newItem(name)
     connection.insert(item)
     resp $({
       "requests_count": getRequestsCount(ctx),
